@@ -23,7 +23,7 @@ db.sequelize = sequelize;
 db.posts = require("./post")(sequelize, Sequelize);
 db.users = require("./user")(sequelize, Sequelize);
 db.comments = require("./comment")(sequelize, Sequelize);
-db.role = require("./models/role")(sequelize, Sequelize);
+//db.role = require("./models/role")(sequelize, Sequelize);
 
 db.users.hasMany(db.posts, { foreignKey: "userId", as: "postIdUser" });
 db.posts.belongsTo(db.users, { foreignKey: "userId", as: "postIdUser" });
