@@ -23,7 +23,7 @@ db.sequelize = sequelize;
 db.posts = require("./post")(sequelize, Sequelize);
 db.users = require("./user")(sequelize, Sequelize);
 db.comments = require("./comment")(sequelize, Sequelize);
-//db.role = require("./models/role")(sequelize, Sequelize);
+db.roles = require("./role")(sequelize, Sequelize);
 
 db.users.hasMany(db.posts, { foreignKey: "userId", as: "postIdUser" });
 db.posts.belongsTo(db.users, { foreignKey: "userId", as: "postIdUser" });
@@ -34,6 +34,16 @@ db.comments.belongsTo(db.users, { foreignKey: "userId", as: "commentIdUser" });
 db.posts.hasMany(db.comments, { foreignKey: "postId", as: "commentIdPost" });
 db.comments.belongsTo(db.posts, { foreignKey: "postId", as: "commentIdPost" });
 
+db.roles.belongsToMany(db.users, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId",
+});
+db.users.belongsToMany(db.roles, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId",
+});
 //sequelize.sync({ alter: true });
 
 module.exports = db;

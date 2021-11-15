@@ -8,14 +8,6 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
     },
     name: { type: Sequelize.STRING },
-    userIdRole: {
-      allowNull: false,
-      type: Sequelize.INTEGER,
-      references: {
-        model: "users",
-        key: "id",
-      },
-    },
   });
   return Role;
 };
