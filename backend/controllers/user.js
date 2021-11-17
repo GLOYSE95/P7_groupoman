@@ -10,8 +10,9 @@ const dotenv = require("dotenv");
 const result = dotenv.config();
 const models = require("../models");
 const { users } = require("../models");
+const { response } = require("express");
 
-exports.signup = async (req, res, next) => {
+exports.signup = (req, res, next) => {
   const emailCrypto = cryptojs
     .HmacSHA256(req.body.email, `${process.env.CRYPTOEMAIL}`)
     .toString();
@@ -52,43 +53,46 @@ exports.signup = async (req, res, next) => {
   });
 };
 
-exports.login = async (req, res, next) => {
+exports.login = (req, res) => {
   const emailCrypto = cryptojs
     .HmacSHA256(req.body.email, `${process.env.CRYPTOEMAIL}`)
     .toString();
+  user
+    .findOne({ where: { email: emailCrypto } })
+    .then((mail) => {
+      if (!mail) {
+        return res.status(404).send({ message: "email non trouvé." });
+      }
+      var mdpHash = bcrypt.hashSync(req.body.password, 10);
 
-  bcrypt.hash(req.body.password, 10).then((hash) => {
-    user.findOne({ where: { email: emailCrypto } });
-    bcrypt
-      .compare(req.body.password, hash)
-      .then((valid) => {
-        if (valid) {
-          var authorities = [];
-          user.getRoles().then((roles) => {
-            for (let i = 0; i < roles.length; i++) {
-              authorities.push("ROLE_" + roles[i].name.toUpperCase());
-            }
-            res.status(200).json({
-              userId: user.id,
-              token: jwt.sign({ userId: user.id }, `${process.env.TOKENKEY}`, {
-                expiresIn: 3600,
-              }),
-            });
-
-            res.status(200).send({
-              id: user.id,
-              nom: user.nom,
-              prenom: user.prenom,
-              email: user.email,
-              roles: authorities,
-              accessToken: token,
-            });
-            console.log("connexion ok");
-          });
+      user.findOne({ where: { password: mdpHash } }).then((password) => {
+        if (!password) {
+          return res.status(401).send({ message: "mot de passe invalide." });
         }
-      })
-      .catch((error) => res.status(500).json({ error }));
-  });
+      });
+      // var passwordIsValid = bcrypt.compareSync(mdpHash, user.password);
+
+      var token = jwt.sign({ id: user.id }, `${process.env.TOKENKEY}`, {
+        expiresIn: 3600,
+      });
+      console.log("req.body.password");
+
+      // var roleUser = [];
+      // user.getRoles().then((roles) => {
+      //   for (let i = 0; i < roles.length; i++) {
+      //     roleUser.push("ROLE_" + roles[i].name.toUpperCase());
+      //   }
+      //   res.status(200).send({
+      //     id: user.id,
+      //     nom: user.nom,
+      //     prenom: user.prenom,
+      //     email: user.email,
+      //     roles: roleUser,
+      //     accessToken: token,
+      // //   });
+      // });
+    })
+    .catch((error) => res.status(500).json({ message: "erreur serveur." }));
 };
 
 exports.updateUser = (req, res, next) => {
@@ -113,7 +117,7 @@ exports.updateUser = (req, res, next) => {
       message: "User Updated",
     });
   } catch (err) {
-    console.log(err);
+    console.log(erreur);
   }
 };
 
