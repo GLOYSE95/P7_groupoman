@@ -13,6 +13,7 @@ module.exports = (sequelize, Sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: false,
+      lowercase: true,
       unique: true,
     },
     password: {
@@ -24,6 +25,3 @@ module.exports = (sequelize, Sequelize) => {
   });
   return User;
 };
-
-//query()méthode de connexion à la DB pour exécuter script MySQL :
-//INSERT, SELECT, UPDATE, DELETE.

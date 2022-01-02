@@ -10,6 +10,8 @@ module.exports = (sequelize, Sequelize) => {
     },
     contain: {
       type: Sequelize.STRING,
+      trim: true,
+      maxlength: 40,
     },
     imagepost: { type: Sequelize.STRING, allowNull: true },
     userId: {

@@ -36,8 +36,9 @@ app.use((req, res, next) => {
 app.use("/api/auth", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
-//app.use("/api/", roleRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+//app.use("/api/", roleRoutes);
 //path.dirname() : Renvoie la partie répertoire d'un chemin
 
 module.exports = app;

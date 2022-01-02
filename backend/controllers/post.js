@@ -8,19 +8,16 @@ exports.createPost = (req, res, next) => {
     res.status(400).send({ message: "Le contenu ne doit pas être vide!" });
     return;
   }
-  console.log(req.body.contain);
   post
     .create({
       contain: req.body.contain,
       imagepost: req.body.imagepost,
       userId: req.params.id,
-      //req.body.id
     })
     .then(() => res.status(201).json({ message: "Post créé !" }))
     .catch((error) => res.status(400).json({ error }));
 };
 
-//A FAIRE : contrainte si post n'existe pas?
 exports.updatePost = (req, res, next) => {
   try {
     post.update(
@@ -35,10 +32,10 @@ exports.updatePost = (req, res, next) => {
       }
     );
     res.json({
-      message: "Post Updated",
+      message: "Post modifié",
     });
   } catch (err) {
-    console.log(err);
+    console.log("Echec de la modification du post");
   }
 };
 
