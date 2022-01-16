@@ -1,10 +1,12 @@
 const db = require("../models");
 const user = db.users;
 const Op = db.Sequelize.Op;
+const jwt = require("jsonwebtoken"); //genere un token
 
 const dotenv = require("dotenv");
 const result = dotenv.config();
 const models = require("../models");
+const { USER } = require("../configuration/dbconfig");
 
 exports.signup = (req, res, next) => {
   user
@@ -36,7 +38,13 @@ exports.login = (req, res) => {
           if (!password) {
             return res.status(401).send({ message: "mot de passe invalide." });
           } else {
-            console.log("utilisateur trouvé");
+            var token = jwt.sign({ id: user.id }, `${process.env.TOKENKEY}`, {
+              expiresIn: "24h",
+            });
+            res.status(200).json({
+              id: user.id,
+              acessToken: token,
+            });
           }
         });
     })
