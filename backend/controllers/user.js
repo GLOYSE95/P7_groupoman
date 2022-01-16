@@ -78,3 +78,27 @@ exports.deleteUser = (req, res, next) => {
       res.status(500).json({ message: "Echec de la suppression" })
     );
 };
+
+//TODO : supprimer mpd
+exports.getAllUsers = (req, res) => {
+  user
+    .findAll()
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+//TODO : supprimer mpd
+exports.getOneUser = (req, res) => {
+  user
+    .findOne({ id: req.params.id })
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
