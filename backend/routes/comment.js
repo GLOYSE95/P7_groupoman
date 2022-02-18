@@ -1,15 +1,20 @@
+const { authJwt } = require("../middleware");
 const express = require("express");
-const router = express.Router();
 const commentCtrl = require("../controllers/comment");
-
-const auth = require("../middleware/auth");
 const multer = require("../middleware/multer-config");
 
-//Posts routes
-router.post("/", multer, commentCtrl.createComment);
-router.put("/:id", auth, multer, commentCtrl.updateComment);
-router.delete("/:id", auth, commentCtrl.deleteComment);
-router.get("/:id", commentCtrl.findOneComment);
-router.get("/", commentCtrl.findAllComment);
+module.exports = function (app) {
+  app.use(function (req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
 
-module.exports = router;
+  app.post("/", multer, commentCtrl.createComment);
+  app.put("/:id", multer, commentCtrl.updateComment);
+  app.delete("/:id", commentCtrl.deleteComment);
+  app.get("/:id", commentCtrl.findOneComment);
+  app.get("/", commentCtrl.findAllComment);
+};

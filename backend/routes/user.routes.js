@@ -1,7 +1,6 @@
-//Appel du controller user
-const userCtrl = require("../controllers/user");
-//Appel de l'authentification
 const { authJwt } = require("../middleware");
+const controller = require("../controllers/user.controller");
+//Test des routes et des token
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
@@ -11,12 +10,8 @@ module.exports = function (app) {
     next();
   });
 
-  // Utilisation de auth afin de vérifier le token et sécuriser la modification de l'utilsateur
-  // Dans ce cas l'utilisateur, l'administrateur et le moderateur peuvent modifier l'utilisateur ou le suprimer
-  app.put("/:id", [authJwt.verifyToken], userCtrl.updateUser);
-  app.delete("/:id", [authJwt.verifyToken], userCtrl.deleteUser);
+  app.get("/api/test/all", controller.allAccess);
 
-  //Il s'agit de test de route
   app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
 
   app.get(

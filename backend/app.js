@@ -6,7 +6,6 @@ const result = dotenv.config();
 
 const app = express(); //Création appli express
 
-const userRoutes = require("./routes/user");
 const postRoutes = require("./routes/post");
 const commentRoutes = require("./routes/comment");
 //const roleRoutes = require("./routes/role");
@@ -33,7 +32,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/auth", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));

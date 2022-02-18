@@ -17,7 +17,6 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 const db = {};
 
 db.Sequelize = Sequelize;
-db.sequelize = sequelize;
 
 db.posts = require("./post")(sequelize, Sequelize);
 db.users = require("./user")(sequelize, Sequelize);
@@ -44,5 +43,14 @@ db.users.belongsToMany(db.roles, {
   otherKey: "roleId",
 });
 //sequelize.sync({ alter: true });
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
+db.roles = ["user", "admin", "moderator"];
 module.exports = db;
